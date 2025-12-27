@@ -1,0 +1,17 @@
+# VS files
+.vs/
+bin/
+obj/
+
+# User files
+*.user
+*.suo
+*.userprefs
+
+# Build results
+*.dll
+*.exe
+
+# Others
+*.cache
+*.log
