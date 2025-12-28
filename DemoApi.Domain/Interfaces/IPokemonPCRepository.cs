@@ -4,12 +4,12 @@ namespace WebApplication1.Interfaces
 {
     public interface IPokemonPCRepository
     {
-        Task<List<PokemonTeam>> GetTeamAsync();
+        Task<List<Pokemon>> GetTeamAsync();
 
-        Task<List<PokemonPC>> GetPokemonInPCAsync();
+        Task<List<Pokemon>> GetPokemonInPCAsync();
 
-        Task<PokemonPC> GetPokemonInPCByIDAsync(int id);
+        Task<Pokemon> GetPokemonInPCByIDAsync(int id);
 
-        Task<PokemonTeam> CreatePokemonToTeamAsync(PokemonTeam pokemon);
+        Task<Pokemon> CreatePokemonToTeamAsync(Pokemon pokemon);
     }
 }

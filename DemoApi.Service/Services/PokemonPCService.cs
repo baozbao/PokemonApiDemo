@@ -60,7 +60,7 @@ namespace DemoApi.Service.Services
             // Success path
 
             // Convert request to entity
-            var pokemonEntity = _mapper.Map<PokemonTeam>(request);
+            var pokemonEntity = _mapper.Map<Pokemon>(request);
 
             if (pokemonEntity.GuidId == Guid.Empty)
             {
@@ -68,9 +68,8 @@ namespace DemoApi.Service.Services
             }
             pokemonEntity.IsInTeam = true; // We are adding to "Team" specifically
             var savedEntity = await _pokemonPCRepository.CreatePokemonToTeamAsync(pokemonEntity);
-            // Map Entity->Model(这里转回通用模型)
-            var resultModel = _mapper.Map<Pokemon>(savedEntity);
-            return Result<Pokemon>.OK(resultModel);
+
+            return Result<Pokemon>.OK(savedEntity);
 
         }
     }

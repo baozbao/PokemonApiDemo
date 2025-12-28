@@ -16,18 +16,18 @@ namespace DemoApi.Service.Mapping
         public MappingProfiles()
         {
             // Team → Pokemon
-            CreateMap<PokemonTeam, Pokemon>()
-                .ForMember(dest => dest.IsInTeam, opt => opt.MapFrom(src => true));
+            //CreateMap<PokemonTeam, Pokemon>()
+                //.ForMember(dest => dest.IsInTeam, opt => opt.MapFrom(src => true));
 
             // PC → Pokemon
-            CreateMap<PokemonPC, Pokemon>()
-                .ForMember(dest => dest.IsInTeam, opt => opt.MapFrom(src => false));
+            //CreateMap<PokemonPC, Pokemon>()
+                //.ForMember(dest => dest.IsInTeam, opt => opt.MapFrom(src => false));
 
             // Request → Pokemon
             // Request DTO -> 实体
             CreateMap<CreatePokemonToTeamRequest, Pokemon>(); // Ignore InteamForNow, service decide
 
-            CreateMap<CreatePokemonToTeamRequest, PokemonTeam>();
+            //CreateMap<CreatePokemonToTeamRequest, PokemonTeam>();
         }
     }
     

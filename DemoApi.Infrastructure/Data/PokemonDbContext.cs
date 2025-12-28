@@ -15,8 +15,7 @@ namespace DemoApi.Infrastructure.Data
         
         }
 
-        public DbSet<PokemonPC> PokemonPC { get; set; }
-        public DbSet<PokemonTeam> PokemonTeam { get; set; }
+        public DbSet<Pokemon> Pokemons { get; set; }
 
     }
 }
