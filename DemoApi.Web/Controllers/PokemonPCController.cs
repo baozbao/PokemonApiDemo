@@ -1,4 +1,4 @@
-﻿using DemoApi.Service.Services;
+﻿using DemoApi.Service.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication1.Controllers
@@ -39,5 +39,32 @@ namespace WebApplication1.Controllers
 
             return Ok(pokemon);
         }
+
+        [HttpPost("team/pokemons")]
+        // Trainer caught a pokemon in the WILD
+        // DOTO: make seperate controllers
+        // And later on, add pokemons should be checking from PC or from wild
+        public async Task<IActionResult> CreatePokemonToTeamAsync([FromBody] CreatePokemonToTeamRequest request)
+        {
+            var result = await _pokemonPcService.CreatePokemonToTeamAsync(request);
+
+            if (result.Success)
+            {
+                // Happy path: 200 OK with data
+                return Ok(result.Data); // result.Data is the Pokemon
+            }
+
+            // "Check the value of result.ErrorCode"
+            return result.ErrorCode switch
+            {
+                // CASE 1: exact match "TeamIsFull"
+                // Return HTTP 409 (Conflict) -> Good for "state rules" like capacity limits
+                "TeamIsFull" => Conflict(result.ErrorMessage),
+                // CASE DEFAULT (_): anything else
+                // Return HTTP 400 (Bad Request) -> Generic client error
+                _ => BadRequest(result.ErrorMessage)
+            };
+        }
+
     }
 }
