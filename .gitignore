@@ -1,17 +1,72 @@
-# VS files
-.vs/
-bin/
-obj/
+# 多训练家 Pokémon API 的数据库与接口设计草案
 
-# User files
-*.user
-*.suo
-*.userprefs
+> 目标：当前 API 只支持「单个训练家」的队伍和 PC，  
+> 将来要扩展为「多个训练家」时的数据库与路由设计。
 
-# Build results
-*.dll
-*.exe
+---
 
-# Others
-*.cache
-*.log
+## 1. 总体思路
+
+为了支持多个训练家，需要：
+
+- 把「训练家」设计成独立实体（表：`Trainers`）
+- 所有宝可梦归属于某个训练家（表：`Pokemons` 中加 `TrainerId` 外键）
+- 不再使用单独的 `PokemonTeam` / `PokemonPC` 表  
+  → 使用字段区分：在队伍 / 在 PC、队伍顺位、PC 位置等
+
+这样，一切数据都围绕：
+
+> **Trainer (1)  — (N) Pokemons**
+
+来设计，自然支持多训练家。
+
+---
+
+## 2. 表结构设计
+
+### 2.1 `Trainers` 表（训练家）
+
+| 列名       | 类型               | 说明                               |
+| ---------- | ------------------ | ---------------------------------- |
+| `Id`       | int, PK            | 主键，自增 ID                      |
+| `GuidId`   | uniqueidentifier   | 对外使用的 GUID（可选）           |
+| `Name`     | nvarchar(100)      | 训练家名字                         |
+| `Gender`   | nvarchar(10)       | 性别（Male/Female/Unknown…）      |
+| `CreatedAt`| datetime2          | 创建时间（可选）                   |
+
+> 对应你的 `Trainer` 实体。
+
+---
+
+### 2.2 `Pokemons` 表（宝可梦实例）
+
+| 列名          | 类型               | 说明                                               |
+| ------------- | ------------------ | -------------------------------------------------- |
+| `Id`          | int, PK            | 主键，自增 ID                                      |
+| `GuidId`      | uniqueidentifier   | 对外使用 GUID（可选）                              |
+| `TrainerId`   | int, FK → Trainers(Id) | 这只宝可梦属于哪个训练家                      |
+| `Name`        | nvarchar(100)      | 宝可梦名字（Pikachu、Charizard…）                 |
+| `Gender`      | nvarchar(10)       | 性别                                               |
+| `Level`       | int                | 等级                                               |
+| `Type`        | nvarchar(50)       | 属性（Electric、Fire/Flying…）                     |
+| `IsInTeam`    | bit                | 是否在队伍：1=队伍里，0=在 PC                      |
+| `TeamSlot`    | tinyint NULL       | 在队伍中位置 1–6；在 PC 里则为 NULL               |
+| `PcBoxIndex`  | int NULL           | 第几个 Box（如果以后支持多 Box，可以先预留）     |
+| `PcSlotIndex` | int NULL           | Box 里第几格（可选）                               |
+| `CreatedAt`   | datetime2          | 获得时间（可选）                                   |
+
+> 现在的 `PokemonTeam` / `PokemonPC` 的列都可以合并到这张表里，  
+> “在哪儿”由 `IsInTeam + TeamSlot/Pc*` 决定。
+
+---
+
+## 3. 常用查询示例
+
+### 3.1 查询某个训练家的队伍宝可梦
+
+```sql
+SELECT *
+FROM Pokemons
+WHERE TrainerId = @trainerId
+  AND IsInTeam = 1
+ORDER BY TeamSlot;
