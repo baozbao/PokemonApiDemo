@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AutoMapper;
+using DemoApi.Domain.Entities;
+using DemoApi.Service.Requests;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using DemoApi.Domain.Entities;
 
 
 namespace DemoApi.Service.Mapping
@@ -21,6 +22,13 @@ namespace DemoApi.Service.Mapping
             // PC → Pokemon
             CreateMap<PokemonPC, Pokemon>()
                 .ForMember(dest => dest.IsInTeam, opt => opt.MapFrom(src => false));
+
+            // Request → Pokemon
+            // Request DTO -> 实体
+            CreateMap<CreatePokemonToTeamRequest, Pokemon>(); // Ignore InteamForNow, service decide
+
+            CreateMap<CreatePokemonToTeamRequest, PokemonTeam>();
         }
     }
+    
 }

@@ -40,5 +40,18 @@ namespace DemoApi.Infrastructure.Repositories
 
             return pokemon;
         }
+
+        public async Task<PokemonTeam> CreatePokemonToTeamAsync(PokemonTeam pokemon) 
+        {
+            // 1. Add to the DbSet (tracks the entity as 'Added')
+            await _pokemonDbContext.PokemonTeam.AddAsync(pokemon);
+
+            // 2. Save Changes (executes INSERT command)
+            // EF Core AUTOMATICALLY populates 'pokemon.Id' here!
+            await _pokemonDbContext.SaveChangesAsync();
+            // 3. Return the updated entity
+            // No need to query again; 'pokemon' now has the new ID.
+            return pokemon;
+        }
     }
 }
