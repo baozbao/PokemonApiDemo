@@ -53,5 +53,10 @@ namespace DemoApi.Infrastructure.Repositories
             // No need to query again; 'pokemon' now has the new ID.
             return pokemon;
         }
+
+        public async Task<Pokemon> AddPokemonToPC(Pokemon pokemon) 
+        {
+            throw new NotImplementedException();    
+        }
     }
 }

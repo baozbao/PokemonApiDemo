@@ -72,5 +72,12 @@ namespace DemoApi.Service.Services
             return Result<Pokemon>.OK(savedEntity);
 
         }
+
+        public async Task<Result<Pokemon>> AddPokemonToPC(CreatePokemonToTeamRequest request) 
+        {
+            //Check Guid
+
+            throw new NotImplementedException();
+        }
     }
 }

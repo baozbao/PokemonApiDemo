@@ -11,5 +11,7 @@ namespace WebApplication1.Interfaces
         Task<Pokemon> GetPokemonInPCByIDAsync(int id);
 
         Task<Pokemon> CreatePokemonToTeamAsync(Pokemon pokemon);
+
+        Task<Pokemon> AddPokemonToPC(Pokemon pokemon);
     }
 }

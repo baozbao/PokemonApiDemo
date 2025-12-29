@@ -35,6 +35,8 @@ namespace WebApplication1.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPokemonInPCByIDAsync(int id)
         {
+
+            //TODO: make a not found result
             var pokemon = await _pokemonPcService.GetPokemonInPCByIDAsync(id);
 
             return Ok(pokemon);
@@ -64,6 +66,19 @@ namespace WebApplication1.Controllers
                 // Return HTTP 400 (Bad Request) -> Generic client error
                 _ => BadRequest(result.ErrorMessage)
             };
+        }
+
+        [HttpPost("pc/pokemons")]
+        // Trainer move pokemon to PC
+        // TODO: think about move from team to pc
+
+        public async Task<IActionResult> AddPokemonToPC([FromBody] CreatePokemonToTeamRequest request) 
+        {
+            // Check if this pokemon already has guid, if already has guid that means it was caught
+            // else, it is a wild pokemon
+
+            throw new NotImplementedException();
+        
         }
 
     }
