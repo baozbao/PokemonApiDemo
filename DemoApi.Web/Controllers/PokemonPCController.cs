@@ -37,9 +37,11 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> GetPokemonInPCByIDAsync(int id)
         {
 
-            //TODO: make a not found result
             var pokemon = await _pokemonPcService.GetPokemonInPCByIDAsync(id);
-            
+            if (pokemon == null)
+            {
+                return NotFound($"Pokemon with ID {id} not found.");
+            }
             return Ok(pokemon);
         }
 
