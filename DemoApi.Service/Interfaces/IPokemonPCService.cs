@@ -13,5 +13,7 @@ public interface IPokemonPCService
     Task<Result<Pokemon>> CreatePokemonToTeamAsync(CreatePokemonToTeamRequest request);
 
     Task<Result<Pokemon>> AddPokemonToPC(CreatePokemonToTeamRequest request);
+
+    Task<Result<Pokemon>> ReleasePokemon(int id);
 }
 

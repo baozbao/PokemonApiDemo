@@ -43,8 +43,8 @@ namespace DemoApi.Service.Services
         public async Task<Pokemon> GetPokemonInPCByIDAsync(int id)
         {
             var pokemon = await _pokemonPCRepository.GetPokemonInPCByIDAsync(id);
-            var result = _mapper.Map<Pokemon>(pokemon);
-            return result;
+
+            return pokemon;
         }
 
         public async Task<Result<Pokemon>> CreatePokemonToTeamAsync(CreatePokemonToTeamRequest request)
@@ -78,6 +78,23 @@ namespace DemoApi.Service.Services
             //Check Guid
 
             throw new NotImplementedException();
+        }
+
+        public async Task<Result<Pokemon>> ReleasePokemon(int id) 
+        {
+            var pokemon = await GetPokemonInPCByIDAsync(id);
+
+            if (pokemon == null) 
+            {
+                return Result<Pokemon>.Fail("NotFound", $"Pokemon with ID {id} not found.");
+            }
+            if (pokemon.IsInTeam) 
+            {
+                return Result<Pokemon>.Fail("InvalidAction", "You cannot release a pokemon who is currently in team.");
+            }
+            var releasedPokemon = await _pokemonPCRepository.ReleasePokemon(id);
+                
+            return Result<Pokemon>.OK(releasedPokemon);
         }
     }
 }

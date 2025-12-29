@@ -35,7 +35,7 @@ namespace DemoApi.Infrastructure.Repositories
         public async Task<Pokemon> GetPokemonInPCByIDAsync(int id) 
         {
             var pokemon = await _pokemonDbContext.Pokemons
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id && p.IsReleased == false);
 
 
             return pokemon;
@@ -57,6 +57,24 @@ namespace DemoApi.Infrastructure.Repositories
         public async Task<Pokemon> AddPokemonToPC(Pokemon pokemon) 
         {
             throw new NotImplementedException();    
+        }
+
+
+        public async Task<Pokemon> ReleasePokemon(int id)
+        {
+            var pokemon = await _pokemonDbContext.Pokemons
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (pokemon == null) 
+            {
+                return null;
+            }
+
+            pokemon.IsReleased = true;
+
+            await _pokemonDbContext.SaveChangesAsync();
+
+            ///TODO: check if the pokemon's info is updated in the return
+            return pokemon;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DemoApi.Service.Requests;
+﻿using DemoApi.Domain.Entities;
+using DemoApi.Service.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApplication1.Controllers
@@ -71,7 +72,6 @@ namespace WebApplication1.Controllers
         [HttpPost("pc/pokemons")]
         // Trainer move pokemon to PC
         // TODO: think about move from team to pc
-
         public async Task<IActionResult> AddPokemonToPC([FromBody] CreatePokemonToTeamRequest request) 
         {
             // Check if this pokemon already has guid, if already has guid that means it was caught
@@ -81,5 +81,27 @@ namespace WebApplication1.Controllers
         
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> ReleasePokemon(int id) 
+        {
+            var result = await _pokemonPcService.ReleasePokemon(id);
+
+            if (result.Success)
+            {
+                // 这里的 result.Data 就是刚刚在 Service 里返回的那个被软删除的 Pokemon
+                return Ok(result.Data);
+            }
+            // 失败
+            return result.ErrorCode switch
+            {
+                // 如果是 NotFound，返回 404
+                "NotFound" => NotFound(result.ErrorMessage),
+
+                // 其他错误 (比如数据库挂了)，返回 400
+                _ => BadRequest(result.ErrorMessage)
+            };
+
+
+        }
     }
 }

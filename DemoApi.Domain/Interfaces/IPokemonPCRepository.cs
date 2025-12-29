@@ -13,5 +13,7 @@ namespace WebApplication1.Interfaces
         Task<Pokemon> CreatePokemonToTeamAsync(Pokemon pokemon);
 
         Task<Pokemon> AddPokemonToPC(Pokemon pokemon);
+
+        Task<Pokemon> ReleasePokemon(int id);
     }
 }
