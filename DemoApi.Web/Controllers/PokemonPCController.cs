@@ -1,4 +1,5 @@
 ﻿using DemoApi.Domain.Entities;
+using DemoApi.Service.Common;
 using DemoApi.Service.Requests;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +34,7 @@ namespace WebApplication1.Controllers
             return Ok(pokemons);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public async Task<IActionResult> GetPokemonInPCByIDAsync(int id)
         {
 
@@ -41,6 +42,18 @@ namespace WebApplication1.Controllers
             if (pokemon == null)
             {
                 return NotFound($"Pokemon with ID {id} not found.");
+            }
+            return Ok(pokemon);
+        }
+
+        [HttpGet("guid/{guid}")]
+        public async Task<IActionResult> GetPokemonInPCByGuidAsync(Guid guid)
+        {
+
+            var pokemon = await _pokemonPcService.GetPokemonInPCByGuidAsync(guid);
+            if (pokemon == null)
+            {
+                return NotFound($"Pokemon with GUID {guid} not found.");
             }
             return Ok(pokemon);
         }
@@ -59,28 +72,35 @@ namespace WebApplication1.Controllers
                 return Ok(result.Data); // result.Data is the Pokemon
             }
 
-            // "Check the value of result.ErrorCode"
             return result.ErrorCode switch
             {
-                // CASE 1: exact match "TeamIsFull"
-                // Return HTTP 409 (Conflict) -> Good for "state rules" like capacity limits
+
                 "TeamIsFull" => Conflict(result.ErrorMessage),
-                // CASE DEFAULT (_): anything else
-                // Return HTTP 400 (Bad Request) -> Generic client error
+
                 _ => BadRequest(result.ErrorMessage)
             };
         }
 
-        [HttpPost("pc/pokemons")]
-        // Trainer move pokemon to PC
-        // TODO: think about move from team to pc
-        public async Task<IActionResult> AddPokemonToPC([FromBody] CreatePokemonToTeamRequest request) 
+        [HttpPost("teampc/swap")]
+        // Trainer Swap pokemon from team to pc
+        public async Task<IActionResult> SwapPokemonFromTeamToPC(Guid pokemonInTeamGuid, Guid pokemonInPcId) 
         {
-            // Check if this pokemon already has guid, if already has guid that means it was caught
-            // else, it is a wild pokemon
 
-            throw new NotImplementedException();
-        
+            var result = await _pokemonPcService.SwapPokemonFromTeamToPC(pokemonInTeamGuid, pokemonInPcId);
+
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+
+            return result.ErrorCode switch
+            {
+                "NotFound" => NotFound(result.ErrorMessage),    // 404
+
+                "InvalidOperation" => Conflict(result.ErrorMessage),// 409 (状态冲突)
+                _ => BadRequest(result.ErrorMessage)            // 400
+            };
+
         }
 
         [HttpDelete("{id}")]
