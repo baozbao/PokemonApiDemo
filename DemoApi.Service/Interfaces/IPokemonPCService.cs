@@ -10,6 +10,12 @@ public interface IPokemonPCService
 
     Task<Pokemon> GetPokemonInPCByIDAsync(int id);
 
+    Task<Pokemon> GetPokemonInPCByGuidAsync(Guid guid);
+
     Task<Result<Pokemon>> CreatePokemonToTeamAsync(CreatePokemonToTeamRequest request);
+
+    Task<Result<Team>> SwapPokemonFromTeamToPC(Guid pokemonInTeamGuid, Guid pokemonInPcGuid);
+
+    Task<Result<Pokemon>> ReleasePokemon(int id);
 }
 

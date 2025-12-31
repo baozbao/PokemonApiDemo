@@ -35,8 +35,15 @@ namespace DemoApi.Infrastructure.Repositories
         public async Task<Pokemon> GetPokemonInPCByIDAsync(int id) 
         {
             var pokemon = await _pokemonDbContext.Pokemons
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id && p.IsReleased == false);
 
+            return pokemon;
+        }
+
+        public async Task<Pokemon> GetPokemonInPCByGuidAsync(Guid guid)
+        {
+            var pokemon = await _pokemonDbContext.Pokemons
+                .FirstOrDefaultAsync(p => p.GuidId == guid && p.IsReleased == false);
 
             return pokemon;
         }
@@ -52,6 +59,42 @@ namespace DemoApi.Infrastructure.Repositories
             // 3. Return the updated entity
             // No need to query again; 'pokemon' now has the new ID.
             return pokemon;
+        }
+
+        //public async Task<Pokemon> SwapPokemonFromTeamToPC(Guid pokemonInTeamGuid, Guid pokemonInPcGuid) 
+        //{
+        //    throw new NotImplementedException();    
+        //}
+
+
+        public async Task<Pokemon> ReleasePokemon(int id)
+        {
+            var pokemon = await _pokemonDbContext.Pokemons
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (pokemon == null) 
+            {
+                return null;
+            }
+
+            pokemon.IsReleased = true;
+
+            await _pokemonDbContext.SaveChangesAsync();
+
+            ///TODO: check if the pokemon's info is updated in the return
+            return pokemon;
+        }
+
+
+        // 只是告诉 EF Core：这个对象变了，等会儿记得存。
+        public void Update(Pokemon pokemon)
+        {
+            _pokemonDbContext.Pokemons.Update(pokemon);
+        }
+
+        // 手动 “原子性操作”， 这样的话我们可以update 几十个然后再savechange去保证原子性
+        public async Task SaveChangesAsync()
+        {
+            await _pokemonDbContext.SaveChangesAsync();
         }
     }
 }
