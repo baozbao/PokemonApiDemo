@@ -2,12 +2,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DemoApi.Web\DemoApi.Web.csproj" />
+    <ProjectReference Include="..\DemoApi.Domain\DemoApi.Domain.csproj" />
+    <ProjectReference Include="..\DemoApi.Service\DemoApi.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

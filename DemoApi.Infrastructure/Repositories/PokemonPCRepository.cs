@@ -1,7 +1,7 @@
 ﻿using DemoApi.Domain.Entities;
 using DemoApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using WebApplication1.Interfaces;
+using DemoApi.Domain.Interfaces;
 
 namespace DemoApi.Infrastructure.Repositories
 {

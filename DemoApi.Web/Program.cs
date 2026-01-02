@@ -1,12 +1,10 @@
-using DemoApi.Infrastructure.Data;
+ï»¿using DemoApi.Infrastructure.Data;
 using DemoApi.Infrastructure.Repositories;
 using DemoApi.Service.Services;
 using Microsoft.EntityFrameworkCore;
-using WebApplication1.Interfaces;
+using DemoApi.Domain.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 //DB connection
 var connStr = builder.Configuration.GetConnectionString("PokeMonCenterDB");
@@ -16,13 +14,13 @@ builder.Services.AddDbContext<PokemonDbContext>(options =>
 );
 
 //DI
-
 builder.Services.AddScoped<IPokemonPCRepository, PokemonPCRepository>();
 builder.Services.AddScoped<IPokemonPCService, PokemonPCService>();
-// ×¢²á Controllers
+
+// Controllers
 builder.Services.AddControllers();
 
-// ×¢²á Swagger
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -31,7 +29,6 @@ builder.Services.AddAutoMapper(typeof(DemoApi.Service.Mapping.MappingProfiles).A
 var app = builder.Build();
 
 // Middleware
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
