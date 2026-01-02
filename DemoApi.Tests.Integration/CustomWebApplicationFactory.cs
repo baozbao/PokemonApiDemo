@@ -12,8 +12,8 @@ namespace DemoApi.Tests.Integration
     // 自定义 Web 工厂类 (Custom Web Application Factory)
     // ==========================================
     // 继承自 WebApplicationFactory<Program>
-    // 泛型参数 <Program> 指的是你 API 项目入口的那个 Program 类。
-    // 它的作用是启动一个“内存中”的 API 服务器，所有配置默认跟你的真实项目一模一样。
+    // 泛型参数 <Program> 指的是 API 项目入口的那个 Program 类。
+    // 作用是启动一个“内存中”的 API 服务器，所有配置默认跟真实项目一模一样
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
         // 核心方法：配置 Web 主机
@@ -65,6 +65,8 @@ namespace DemoApi.Tests.Integration
                     // [数据预设] 注入热门宝可梦 (Seeding)
                     // ==========================================
                     // 如果数据库是空的，那就塞点老婆进去 (咳咳，宝可梦)
+
+                    #region Inject into Pokemons
                     if (!db.Pokemons.Any())
                     {
                         db.Pokemons.AddRange(
@@ -113,6 +115,7 @@ namespace DemoApi.Tests.Integration
 
                         db.SaveChanges();
                     }
+                    #endregion
                 }
             });
         }
