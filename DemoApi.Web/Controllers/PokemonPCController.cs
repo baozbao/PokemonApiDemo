@@ -127,10 +127,14 @@ namespace WebApplication1.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromQuery] SearchPokemonRequest request)
+        public async Task<IActionResult> SearchPokemonAsync([FromQuery] SearchPokemonRequest request)
         {
             var result = await _pokemonPcService.SearchPokemonAsync(request);
-            return Ok(result);
+            if (result.Success)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.ErrorMessage);
         }
     }
 }

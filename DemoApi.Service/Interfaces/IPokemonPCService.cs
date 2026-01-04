@@ -19,5 +19,5 @@ public interface IPokemonPCService
 
     Task<Result<Pokemon>> ReleasePokemon(int id);
 
-    Task<PagedResult<Pokemon>> SearchPokemonAsync(SearchPokemonRequest request);
+    Task<Result<PagedResult<Pokemon>>> SearchPokemonAsync(SearchPokemonRequest request);
 }

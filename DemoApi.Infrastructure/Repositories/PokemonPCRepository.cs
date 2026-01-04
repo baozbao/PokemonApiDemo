@@ -92,7 +92,7 @@ namespace DemoApi.Infrastructure.Repositories
             await _pokemonDbContext.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<Pokemon>> SearchAsync(PokemonSearchFilter filter)
+        public async Task<PagedResult<Pokemon>> SearchPokemonAsync(PokemonSearchFilter filter)
         {
             // Prepare the query as IQueryable
             var query = _pokemonDbContext.Pokemons.AsQueryable();

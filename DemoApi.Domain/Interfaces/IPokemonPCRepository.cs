@@ -24,6 +24,6 @@ namespace DemoApi.Domain.Interfaces
         // 真正的提交
         Task SaveChangesAsync();
 
-        Task<PagedResult<Pokemon>> SearchAsync(PokemonSearchFilter filter);
+        Task<PagedResult<Pokemon>> SearchPokemonAsync(PokemonSearchFilter filter);
     }
 }

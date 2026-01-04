@@ -142,11 +142,11 @@ namespace DemoApi.Service.Services
                 
             return Result<Pokemon>.OK(releasedPokemon);
         }
-        public async Task<PagedResult<Pokemon>> SearchPokemonAsync(SearchPokemonRequest request)
+        public async Task<Result<PagedResult<Pokemon>>> SearchPokemonAsync(SearchPokemonRequest request)
         {
             var filter = _mapper.Map<PokemonSearchFilter>(request);
-            var result = await _pokemonPCRepository.SearchAsync(filter);
-            return result;
+            var result = await _pokemonPCRepository.SearchPokemonAsync(filter);
+            return Result<PagedResult<Pokemon>>.OK(result);
         }
     }
 }
