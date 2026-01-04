@@ -3,7 +3,7 @@ using DemoApi.Domain.Entities;
 using DemoApi.Service.Common;
 using DemoApi.Service.Requests;
 using System;
-using WebApplication1.Interfaces;
+using DemoApi.Domain.Interfaces;
 
 namespace DemoApi.Service.Services
 {

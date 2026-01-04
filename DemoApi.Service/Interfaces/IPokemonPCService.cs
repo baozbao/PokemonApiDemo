@@ -18,4 +18,3 @@ public interface IPokemonPCService
 
     Task<Result<Pokemon>> ReleasePokemon(int id);
 }
-

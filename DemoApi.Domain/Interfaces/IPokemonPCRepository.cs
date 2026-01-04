@@ -1,6 +1,6 @@
 ﻿using DemoApi.Domain.Entities;
 
-namespace WebApplication1.Interfaces
+namespace DemoApi.Domain.Interfaces
 {
     public interface IPokemonPCRepository
     {
