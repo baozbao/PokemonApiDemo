@@ -1,6 +1,7 @@
 ﻿using DemoApi.Domain.Entities;
 using DemoApi.Service.Common;
 using DemoApi.Service.Requests;
+using DemoApi.Domain.Models;
 
 public interface IPokemonPCService
 {
@@ -17,4 +18,6 @@ public interface IPokemonPCService
     Task<Result<Team>> SwapPokemonFromTeamToPC(Guid pokemonInTeamGuid, Guid pokemonInPcGuid);
 
     Task<Result<Pokemon>> ReleasePokemon(int id);
+
+    Task<PagedResult<Pokemon>> SearchPokemonAsync(SearchPokemonRequest request);
 }

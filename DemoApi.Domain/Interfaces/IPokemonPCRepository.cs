@@ -1,4 +1,6 @@
 ﻿using DemoApi.Domain.Entities;
+using DemoApi.Domain.Models;
+using System.Threading.Tasks;
 
 namespace DemoApi.Domain.Interfaces
 {
@@ -14,8 +16,6 @@ namespace DemoApi.Domain.Interfaces
 
         Task<Pokemon> CreatePokemonToTeamAsync(Pokemon pokemon);
 
-        //Task<Pokemon> SwapPokemonFromTeamToPC(Guid pokemonInTeamGuid, Guid pokemonInPcGuid);
-
         Task<Pokemon> ReleasePokemon(int id);
 
         // 纯内存操作，无需 Async
@@ -23,5 +23,7 @@ namespace DemoApi.Domain.Interfaces
 
         // 真正的提交
         Task SaveChangesAsync();
+
+        Task<PagedResult<Pokemon>> SearchAsync(PokemonSearchFilter filter);
     }
 }
