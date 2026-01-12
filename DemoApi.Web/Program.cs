@@ -3,6 +3,8 @@ using DemoApi.Infrastructure.Repositories;
 using DemoApi.Service.Services;
 using Microsoft.EntityFrameworkCore;
 using DemoApi.Domain.Interfaces;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,12 @@ builder.Services.AddScoped<IPokemonPCRepository, PokemonPCRepository>();
 builder.Services.AddScoped<IPokemonPCService, PokemonPCService>();
 
 // Controllers
+// Controllers
 builder.Services.AddControllers();
+
+// FluentValidation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<DemoApi.Service.Validators.SearchPokemonRequestValidator>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

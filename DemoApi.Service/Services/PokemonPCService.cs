@@ -4,6 +4,7 @@ using DemoApi.Service.Common;
 using DemoApi.Service.Requests;
 using System;
 using DemoApi.Domain.Interfaces;
+using DemoApi.Domain.Models;
 
 namespace DemoApi.Service.Services
 {
@@ -114,6 +115,7 @@ namespace DemoApi.Service.Services
             // 告诉 Repo：这俩变了 (还未提交)
             _pokemonPCRepository.Update(pokemonInTeam);
             _pokemonPCRepository.Update(pokemonInPC);
+
             // ===========================
             // 原子操作
             // ===========================
@@ -139,6 +141,12 @@ namespace DemoApi.Service.Services
             var releasedPokemon = await _pokemonPCRepository.ReleasePokemon(id);
                 
             return Result<Pokemon>.OK(releasedPokemon);
+        }
+        public async Task<Result<PagedResult<Pokemon>>> SearchPokemonAsync(SearchPokemonRequest request)
+        {
+            var filter = _mapper.Map<PokemonSearchFilter>(request);
+            var result = await _pokemonPCRepository.SearchPokemonAsync(filter);
+            return Result<PagedResult<Pokemon>>.OK(result);
         }
     }
 }

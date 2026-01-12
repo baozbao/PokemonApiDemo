@@ -2,6 +2,7 @@
 using DemoApi.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using DemoApi.Domain.Interfaces;
+using DemoApi.Domain.Models;
 
 namespace DemoApi.Infrastructure.Repositories
 {
@@ -61,12 +62,6 @@ namespace DemoApi.Infrastructure.Repositories
             return pokemon;
         }
 
-        //public async Task<Pokemon> SwapPokemonFromTeamToPC(Guid pokemonInTeamGuid, Guid pokemonInPcGuid) 
-        //{
-        //    throw new NotImplementedException();    
-        //}
-
-
         public async Task<Pokemon> ReleasePokemon(int id)
         {
             var pokemon = await _pokemonDbContext.Pokemons
@@ -95,6 +90,63 @@ namespace DemoApi.Infrastructure.Repositories
         public async Task SaveChangesAsync()
         {
             await _pokemonDbContext.SaveChangesAsync();
+        }
+
+        public async Task<PagedResult<Pokemon>> SearchPokemonAsync(PokemonSearchFilter filter)
+        {
+            // Prepare the query as IQueryable
+            var query = _pokemonDbContext.Pokemons.AsQueryable();
+
+            // 1. Apply Filtering
+            if (!string.IsNullOrWhiteSpace(filter.Name))
+            {
+                query = query.Where(p => p.Name.Contains(filter.Name));
+            }
+            if (filter.MinLevel.HasValue)
+            {
+                query = query.Where(p => p.Level >= filter.MinLevel.Value);
+            }
+            if (filter.MaxLevel.HasValue)
+            {
+                query = query.Where(p => p.Level <= filter.MaxLevel.Value);
+            }
+            if (!string.IsNullOrWhiteSpace(filter.Type))
+            {
+                query = query.Where(p => p.Type.Contains(filter.Type));
+            }
+            if (!string.IsNullOrWhiteSpace(filter.Specie))
+            {
+                query = query.Where(p => p.Specie.Contains(filter.Specie));
+            }
+            if (!string.IsNullOrWhiteSpace(filter.Gender))
+            {
+                query = query.Where(p => p.Gender == filter.Gender);
+            }
+
+            // 2. Count Total (before paging)
+            var totalCount = await query.CountAsync();
+
+            // 3. Apply Sorting (Default by ID for stability)
+            query = query.OrderBy(p => p.Id);
+
+            // 4. Apply Pagination (Skip & Take)
+            // Ensure Page is at least 1 to avoid negative skip
+            var pageIndex = filter.Page < 1 ? 1 : filter.Page;
+            var pageSize = filter.PageSize < 1 ? 10 : filter.PageSize;
+
+            var items = await query
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // 5. Return Paged Result
+            return new PagedResult<Pokemon>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                Page = pageIndex,
+                PageSize = pageSize
+            };
         }
     }
 }

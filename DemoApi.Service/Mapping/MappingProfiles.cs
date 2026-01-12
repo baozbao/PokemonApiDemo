@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DemoApi.Domain.Entities;
 using DemoApi.Service.Requests;
+using DemoApi.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,8 @@ namespace DemoApi.Service.Mapping
             CreateMap<CreatePokemonToTeamRequest, Pokemon>(); // Ignore InteamForNow, service decide
 
             //CreateMap<CreatePokemonToTeamRequest, PokemonTeam>();
+
+            CreateMap<SearchPokemonRequest, PokemonSearchFilter>();
         }
     }
     

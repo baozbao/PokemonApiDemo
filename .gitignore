@@ -48,6 +48,9 @@ $RECYCLE.BIN/
 # Other
 *.log
 *.tmp
+# Documentation & Temp Scripts
 /DesignDraft.md
-Loona_Suggestions.md
-seed_data.sql
+
+*.sql
+*.ps1
+/Loona_Suggestions.md

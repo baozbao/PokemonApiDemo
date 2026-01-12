@@ -14,6 +14,8 @@ namespace DemoApi.Domain.Entities
 
         public string Name { get; set; } = string.Empty;
 
+        public string Specie { get; set; } = string.Empty;
+
         public string Gender { get; set; } = "Unknown";
 
         // true = 在队伍, false = 在电脑里
