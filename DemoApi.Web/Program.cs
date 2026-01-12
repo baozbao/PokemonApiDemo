@@ -35,6 +35,28 @@ builder.Services.AddAutoMapper(typeof(DemoApi.Service.Mapping.MappingProfiles).A
 
 var app = builder.Build();
 
+// 自动让 Docker 在启动时创建数据库 (Apply Migrations)
+// 不然每次还得手动创建库
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<PokemonDbContext>();
+        context.Database.Migrate(); // 没有库就创建，有库就更新
+        Console.WriteLine("Database migrated successfully. 🟢");
+
+        // 自动生成测试数据 (Seeding)
+        // 代码挪到了 DemoApi.Infrastructure/Data/PokemonSeeder.cs 里面，为了让 Program.cs 干净点
+        PokemonSeeder.Seed(context);
+        // -----------------------------------------------------
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database migration failed: {ex.Message} ");
+    }
+}
+
 // Middleware
 if (app.Environment.IsDevelopment())
 {
@@ -48,10 +70,10 @@ app.MapGet("/", context =>
     return Task.CompletedTask;
 });
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Docker 里没有配证书，得把这个关了，不然一直报黄字警告
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+public partial class Program { } // Intergration test 用
